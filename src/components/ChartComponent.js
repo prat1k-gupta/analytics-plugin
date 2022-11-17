@@ -64,7 +64,7 @@ export function ChartComponent({currSheet}) {
     final = makeNewObject(currSheet, 1, 3);
   }
 
-  console.log("finalforGraph", final); 
+  // console.log("finalforGraph", final); 
   const data = {
     labels,
     datasets: final

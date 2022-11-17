@@ -25,7 +25,7 @@ const ChooseFile = () => {
         header: 1,
         }); 
     }
-    return {finalData,sheetN}; 
+    return finalData; 
   }
 
   const handleFile = async (e) => {
@@ -33,12 +33,11 @@ const ChooseFile = () => {
     setFileName(file.name)
     const data = await file.arrayBuffer();
     const sheetsData = readDataFromExcel(data); 
-    console.log("finalData", sheetsData.finalData)
     // getFileData(sheetsData.finalData,sheetsData.sheetN); 
-    setMySheets(sheetsData.finalData); 
+    setMySheets(sheetsData); 
     // console.log("sheetsData",sheetsData.finalData)
   };
-
+console.log(mySheets); 
 return (
   <Container>
     {fileName ? (
@@ -51,13 +50,31 @@ return (
       </Form.Group>
     )}
     {mySheets && (
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          {currSheet}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {sheetNames.map((sheet) => (
+            <Dropdown.Item
+              key={sheet}
+              value={sheet}
+              onClick={(e) => {
+                setCurrSheet(e.target.innerHTML);
+              }}
+            >
+              {sheet}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    )}
+    {mySheets && (
       <div>
-          <ChartComponent currSheet={mySheets[currSheet]}/>          
-          <TableComponent
-            mySheets={mySheets}
-            sheetN={sheetNames}
-            getCurrSheet={(e) => setCurrSheet(e)}
-          />
+        <ChartComponent currSheet={mySheets[currSheet]} />
+        <TableComponent
+          currSheet={mySheets[currSheet]}
+        />
       </div>
     )}
   </Container>
