@@ -6,7 +6,7 @@ const TableComponent = ({currSheet}) => {
 return (
     <Container>
         <div>
-        <Table striped bordered hover >
+        <Table striped bordered hover>
             <thead>
             <tr>
                 {currSheet &&

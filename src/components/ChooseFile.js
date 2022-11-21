@@ -1,22 +1,26 @@
-import react, { useState } from "react";
-import { Container, Dropdown, Form, Table } from "react-bootstrap";
-import { read, utils, writeFile } from "xlsx";
+import { useState } from "react";
+import { Container, Dropdown, Form} from "react-bootstrap";
+import { read, utils} from "xlsx";
 import { ChartComponent } from "./ChartComponent";
 import TableComponent from "./TableComponent";
 
 const ChooseFile = () => {
     //states
-  const [sheetNames, setSheetNames] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const [mySheets, setMySheets] = useState();
-  const [currSheet,setCurrSheet] = useState();
+  // const [workSheets,setWorkSheets] = useState({}); 
+  const [workSheetsNames,setWorkSheetsNames] = useState([]); //done
+  const [workSheets,setWorkSheets] = useState();//done
+  const [currWorkSheet,setCurrWorksheet] = useState(""); //done
+  
+  const [sheetNames, setSheetNames] = useState({});//done
+  const [fileName, setFileName] = useState("");//done
+  const [currSheet,setCurrSheet] = useState("");//done
+  const [defaultSheet,setDefaultSheet] = useState(""); 
 
-  const readDataFromExcel = (data)=>{
+  const readDataFromExcel = (data,name)=>{
     const wb = read(data);
-    console.log("workbook",wb)
+    // console.log("workbook",wb)
     const sheetN = wb.SheetNames;
-    setSheetNames(sheetN);
-    setCurrSheet(wb.SheetNames[0])
+    setSheetNames((prev)=>({...prev,[name] : sheetN}));
     var finalData = {}; 
     for (let i = 0; i < wb.SheetNames.length; i++) {
       let sheetName = wb.SheetNames[i];
@@ -28,34 +32,73 @@ const ChooseFile = () => {
     return finalData; 
   }
 
+  const getWorksheets= async (files,workSheets)=>{
+    await Promise.all(Object.values(files).map(async (file) => {
+      const data = await file.arrayBuffer();
+      const sheetsData = readDataFromExcel(data,file.name);
+      setWorkSheetsNames((prev) => [...prev, file.name]);
+      workSheets[file.name] = sheetsData;
+      // setWorkSheets((prev)=>({...prev, [file.name] : sheetsData}))
+    }));
+    
+  }
+  
   const handleFile = async (e) => {
-    const file = e.target.files[0];
-    setFileName(file.name)
-    const data = await file.arrayBuffer();
-    const sheetsData = readDataFromExcel(data); 
-    // getFileData(sheetsData.finalData,sheetsData.sheetN); 
-    setMySheets(sheetsData); 
-    // console.log("sheetsData",sheetsData.finalData)
+    const files = e.target.files;
+    let workSheets = {}; 
+    await getWorksheets(files,workSheets); 
+    // console.log(Object.keys(workSheets)); 
+    console.log("workSheets" ,workSheets); 
+    setWorkSheets(workSheets); 
+    setCurrWorksheet(Object.keys(workSheets)[0]);
+    // console.log("value", Object.keys(Object.values(workSheets)[0])[0]);
+    const defaultS = Object.keys(Object.values(workSheets)[0])[0]; 
+    setCurrSheet(defaultS);
+    setDefaultSheet(defaultS)
+    setFileName(Object.keys(workSheets)[0]);
   };
-console.log(mySheets); 
+// console.log(mySheets); 
 return (
   <Container>
+    {/* WORK ON THIS */}
+    {workSheets && (
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          {currWorkSheet}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {workSheetsNames.map((sheet) => (
+            <Dropdown.Item
+              key={sheet}
+              value={sheet}
+              onClick={(e) => {
+                setCurrWorksheet(e.target.innerHTML);
+                setFileName(e.target.innerHTML);
+                setCurrSheet(defaultSheet); 
+              }}
+            >
+              {sheet}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    )}
     {fileName ? (
       <p>{fileName}</p>
     ) : (
       <Form.Group controlId="formFileLg" className="mb-3">
         <Form.Label>Choose a excel file</Form.Label>
         <br />
-        <Form.Control type="file" size="lg" onChange={handleFile} />
+        <Form.Control type="file" size="lg" onChange={handleFile} multiple />
       </Form.Group>
     )}
-    {mySheets && (
+    {currWorkSheet && (
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {currSheet}
+          {currSheet ? currSheet : sheetNames[currWorkSheet][0]}
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {sheetNames.map((sheet) => (
+          {sheetNames[currWorkSheet].map((sheet) => (
             <Dropdown.Item
               key={sheet}
               value={sheet}
@@ -69,12 +112,12 @@ return (
         </Dropdown.Menu>
       </Dropdown>
     )}
-    {mySheets && (
+    {/* //to check values  */}
+    {currWorkSheet && console.log("current",workSheets[currWorkSheet][currSheet])}
+    {currSheet && (
       <div>
-        <ChartComponent currSheet={mySheets[currSheet]} />
-        <TableComponent
-          currSheet={mySheets[currSheet]}
-        />
+        <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} />
+        <TableComponent currSheet={workSheets[currWorkSheet][currSheet]} />
       </div>
     )}
   </Container>
