@@ -14,6 +14,7 @@ const ChooseFile = () => {
   const [sheetNames, setSheetNames] = useState({});//done
   const [fileName, setFileName] = useState("");//done
   const [currSheet,setCurrSheet] = useState("");//done
+  const [defaultSheet,setDefaultSheet] = useState(""); 
 
   const readDataFromExcel = (data,name)=>{
     const wb = read(data);
@@ -51,7 +52,9 @@ const ChooseFile = () => {
     setWorkSheets(workSheets); 
     setCurrWorksheet(Object.keys(workSheets)[0]);
     // console.log("value", Object.keys(Object.values(workSheets)[0])[0]);
-    setCurrSheet(Object.keys(Object.values(workSheets)[0])[0]);
+    const defaultS = Object.keys(Object.values(workSheets)[0])[0]; 
+    setCurrSheet(defaultS);
+    setDefaultSheet(defaultS)
     setFileName(Object.keys(workSheets)[0]);
   };
 // console.log(mySheets); 
@@ -71,6 +74,7 @@ return (
               onClick={(e) => {
                 setCurrWorksheet(e.target.innerHTML);
                 setFileName(e.target.innerHTML);
+                setCurrSheet(defaultSheet); 
               }}
             >
               {sheet}
@@ -109,8 +113,8 @@ return (
       </Dropdown>
     )}
     {/* //to check values  */}
-    {/* {currWorkSheet && console.log("current",workSheets[currWorkSheet][currSheet])} */}
-    {currWorkSheet && (
+    {currWorkSheet && console.log("current",workSheets[currWorkSheet][currSheet])}
+    {currSheet && (
       <div>
         <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} />
         <TableComponent currSheet={workSheets[currWorkSheet][currSheet]} />
