@@ -158,15 +158,16 @@ const ChooseFile = () => {
           {currSheet && (
             <div>
               {/* chart component and table component */}
-              <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} sheet={currSheet} />
-              <TableComponent currSheet={workSheets[currWorkSheet][currSheet]} />
+              <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} sheet={currSheet} worksheet = {currWorkSheet} />
+              <h1>Sample Table</h1>
+              <TableComponent currSheet={workSheets[currWorkSheet][currSheet] } />
             </div>
           )}
         </>
         :
         //merge sheet component 
         <>
-          <MergeSheetsChart workSheets={workSheets} />
+          <MergeSheetsChart workSheets={workSheets} worksheet = {currWorkSheet} />
         </>
       }
 

@@ -22,18 +22,6 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
 
 //notes
 //dataset 
@@ -41,9 +29,21 @@ export const options = {
 //label : curr week
 //data : grand total
 
-export function MergeSheetsChart({ workSheets }) {
+export function MergeSheetsChart({ workSheets,worksheet }) {
 
-
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'All Sheets Data',
+      },
+    },
+  };
+  
   const labels = Object.keys(workSheets)
 
   console.log("workSheets mergesheetchart ", workSheets)
@@ -63,8 +63,14 @@ export function MergeSheetsChart({ workSheets }) {
         finalData.push({
           label: keys,
           data: obj[keys],
-          borderColor: randomColor(),
-          backgroundColor: randomColor(),
+          borderColor: randomColor({
+            luminosity: 'bright',
+            format: 'rgb' // e.g. 'rgb(225,200,20)'
+         }),
+          backgroundColor: randomColor({
+            luminosity: 'bright',
+            format: 'rgb' // e.g. 'rgb(225,200,20)'
+         }),
         }
         )
       }
@@ -80,8 +86,11 @@ export function MergeSheetsChart({ workSheets }) {
     <>
       <hr className="separator"></hr>
       <div className='graph'>
-        <Line options={options} data={data} />
-        <TableMergeSheet header={["cities", ...labels]} rows={finalData} />
+        <Line className = "mb-4" options={options} data={data} />
+        <div >
+          <h1>Total Sample Data per Week Table</h1>
+          <TableMergeSheet header={["cities", ...labels]} rows={finalData} />
+        </div>
       </div>
     </>
 

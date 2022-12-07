@@ -24,32 +24,34 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
+
+
+
+
+export function ChartComponent({ currSheet, sheet, worksheet }) {
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: worksheet,
+      },
+      updateMode: 'reset'
     },
-    title: {
-      display: true,
-      text: 'Week 1',
-    },
-    updateMode: 'reset'
-  },
-};
-
-const labels = ['Week1'];
-
-
-
-export function ChartComponent({ currSheet, sheet }) {
+  };
+  
+  const labels = [sheet];
 
   const [graphX, setGraphX] = useState([]);
   const [graphY, setGraphY] = useState([]);
   const [currXKey, setCurrXKey] = useState(null);
   const [currYKey, setCurrYKey] = useState(null);
 
-  console.log("chartSheet chartComponent", currSheet)
+  // console.log("chartSheet chartComponent", currSheet)
 
   useEffect(() => {
     let graphYValues = [];
@@ -86,7 +88,7 @@ export function ChartComponent({ currSheet, sheet }) {
 
       label: sheet[currXKey],
       data: [sheet[currYKey]],
-      backgroundColor: randomColor(),
+      backgroundColor: randomColor({luminosity: 'bright',count: 35}),
     }
   })
 
