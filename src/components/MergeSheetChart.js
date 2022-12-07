@@ -41,46 +41,49 @@ export const options = {
 //label : curr week
 //data : grand total
 
-export function MergeSheetsChart({workSheets}) {
+export function MergeSheetsChart({ workSheets }) {
 
-    
-    const labels = Object.keys(workSheets)
 
-    console.log("workSheets mergesheetchart ",workSheets)
-    const obj = {}; 
-    const finalData = []; 
-    for(let curr in workSheets){
-        for(let keys in workSheets[curr]){
-            // console.log(keys);
-            const last = Object.values(workSheets[curr][keys])[Object.keys(workSheets[curr][keys]).length-1]
-            //last['Samples Delivered'];
-            if(!obj[keys]){
-                obj[keys] = []; 
-            }
-            obj[keys].push(last['Samples Delivered']);
-            // console.log("length",workSheets.length);
-            if(obj[keys].length === Object.keys(workSheets).length && obj[keys][0]){
-                finalData.push({
-                    label : keys,
-                    data : obj[keys],
-                    borderColor: randomColor(),
-                    backgroundColor: randomColor(),
-                }
-            )
-            }
+  const labels = Object.keys(workSheets)
+
+  console.log("workSheets mergesheetchart ", workSheets)
+  const obj = {};
+  const finalData = [];
+  for (let curr in workSheets) {
+    for (let keys in workSheets[curr]) {
+      // console.log(keys);
+      const last = Object.values(workSheets[curr][keys])[Object.keys(workSheets[curr][keys]).length - 1]
+      //last['Samples Delivered'];
+      if (!obj[keys]) {
+        obj[keys] = [];
+      }
+      obj[keys].push(last['Samples Delivered']);
+      // console.log("length",workSheets.length);
+      if (obj[keys].length === Object.keys(workSheets).length && obj[keys][0]) {
+        finalData.push({
+          label: keys,
+          data: obj[keys],
+          borderColor: randomColor(),
+          backgroundColor: randomColor(),
         }
+        )
+      }
     }
+  }
 
-    const data = {
-        labels,
-        datasets: finalData
-    };
-  return( 
-    finalData &&  
-        <>
-            <Line options={options} data={data} />
-            <TableMergeSheet header = {["cities",...labels]} rows = {finalData}/>
-        </>
-    
-    );
+  const data = {
+    labels,
+    datasets: finalData
+  };
+  return (
+    finalData &&
+    <>
+      <hr className="separator"></hr>
+      <div className='graph'>
+        <Line options={options} data={data} />
+        <TableMergeSheet header={["cities", ...labels]} rows={finalData} />
+      </div>
+    </>
+
+  );
 }

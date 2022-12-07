@@ -11,6 +11,8 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { Dropdown } from 'react-bootstrap';
+
+import "./styles.css"
 // import faker from 'faker';
 
 ChartJS.register(
@@ -40,40 +42,40 @@ const labels = ['Week1'];
 
 
 
-export function ChartComponent({currSheet,sheet}) {
-  
-  const [graphX,setGraphX] = useState([]); 
-  const [graphY,setGraphY] = useState([]); 
-  const [currXKey,setCurrXKey] = useState(null); 
-  const [currYKey,setCurrYKey] = useState(null);
+export function ChartComponent({ currSheet, sheet }) {
 
-  console.log("chartSheet chartComponent",currSheet)
-  
-  useEffect(()=>{
-    let graphYValues = []; 
-    let graphXValues = []; 
+  const [graphX, setGraphX] = useState([]);
+  const [graphY, setGraphY] = useState([]);
+  const [currXKey, setCurrXKey] = useState(null);
+  const [currYKey, setCurrYKey] = useState(null);
+
+  console.log("chartSheet chartComponent", currSheet)
+
+  useEffect(() => {
+    let graphYValues = [];
+    let graphXValues = [];
     //we render the curr values and graphx values
-    function isNumber(value) {   
+    function isNumber(value) {
       if (typeof value === 'number') {
-          return true;
+        return true;
       }
     }
 
-    for(const keys in currSheet[0]){
-      if(isNumber(currSheet[0][keys])){
+    for (const keys in currSheet[0]) {
+      if (isNumber(currSheet[0][keys])) {
         // setGraphY((prev)=> [...prev,keys])
-        graphYValues.push(keys); 
-      }else graphXValues.push(keys); 
+        graphYValues.push(keys);
+      } else graphXValues.push(keys);
     }
-    
+
     setGraphX(graphXValues);
     setGraphY(graphYValues);
     setCurrXKey(graphXValues[0])
-    setCurrYKey(graphYValues[0]) 
-  },[currSheet])
+    setCurrYKey(graphYValues[0])
+  }, [currSheet])
 
-  const final = currSheet.map((sheet)=>{
-    if(sheet[currXKey]==="Grand Total"){
+  const final = currSheet.map((sheet) => {
+    if (sheet[currXKey] === "Grand Total") {
       return {
         label: "",
         data: 0,
@@ -81,62 +83,69 @@ export function ChartComponent({currSheet,sheet}) {
       }
     }
     return {
-    
-    label: sheet[currXKey],
-    data: [sheet[currYKey]],
-    backgroundColor: randomColor(),
-  }})
+
+      label: sheet[currXKey],
+      data: [sheet[currYKey]],
+      backgroundColor: randomColor(),
+    }
+  })
 
   const data = {
     labels,
     datasets: final
   };
-  console.log("final",final); 
+  console.log("final", final);
 
   return (
-  <>
-    {graphX && (
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {currXKey}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {graphX.map((sheet) => (
-            <Dropdown.Item
-              key={sheet}
-              value={sheet}
-              onClick={(e) => {
-                setCurrXKey(e.target.innerHTML);
-              }}
-            >
-              {sheet}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-    )}
-    {graphY && (
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {currYKey}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {graphY.map((sheet) => (
-            <Dropdown.Item
-              key={sheet}
-              value={sheet}
-              onClick={(e) => {
-                setCurrYKey(e.target.innerHTML);
-              }}
-            >
-              {sheet}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-    )}
+    <>
+      <div className='drop-button'>
+        {graphX && (
+          <Dropdown className='drop-left drop-padding'>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {currXKey}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {graphX.map((sheet) => (
+                <Dropdown.Item
+                  key={sheet}
+                  value={sheet}
+                  onClick={(e) => {
+                    setCurrXKey(e.target.innerHTML);
+                  }}
+                >
+                  {sheet}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
+        {graphY && (
+          <Dropdown className='drop-right drop-padding'>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {currYKey}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {graphY.map((sheet) => (
+                <Dropdown.Item
+                  key={sheet}
+                  value={sheet}
+                  onClick={(e) => {
+                    setCurrYKey(e.target.innerHTML);
+                  }}
+                >
+                  {sheet}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
+      </div>
 
-    {final &&  <Bar options={options} data={data} />}
-  </>
+      <hr className="separator"></hr>
+
+      <div className='graph'>
+        {final && <Bar options={options} data={data} />}
+      </div>
+    </>
   );
 }

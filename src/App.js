@@ -6,7 +6,7 @@ function App() {
   // console.log(currSheet);
   return (
     <div className="App">
-      <h1>Analytics plugin</h1>
+      <h1 className="shadow pb-2 mb-2">Analytics Plugin</h1>
       <ChooseFile />
     </div>
   );
