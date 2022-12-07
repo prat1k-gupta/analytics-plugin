@@ -26,7 +26,7 @@ const ChooseFile = () => {
       let sheetName = wb.SheetNames[i];
       let workSheet = wb.Sheets[sheetName]; 
       finalData[sheetName] = utils.sheet_to_json(workSheet,{
-        header: 1,
+        range: 1,
         }); 
     }
     return finalData; 
@@ -36,6 +36,7 @@ const ChooseFile = () => {
     await Promise.all(Object.values(files).map(async (file) => {
       const data = await file.arrayBuffer();
       const sheetsData = readDataFromExcel(data,file.name);
+      console.log("SheetData: ",sheetsData)
       setWorkSheetsNames((prev) => [...prev, file.name]);
       workSheets[file.name] = sheetsData;
       // setWorkSheets((prev)=>({...prev, [file.name] : sheetsData}))
@@ -47,8 +48,7 @@ const ChooseFile = () => {
     const files = e.target.files;
     let workSheets = {}; 
     await getWorksheets(files,workSheets); 
-    // console.log(Object.keys(workSheets)); 
-    console.log("workSheets" ,workSheets); 
+    // console.log(Object.keys(workSheets));
     setWorkSheets(workSheets); 
     setCurrWorksheet(Object.keys(workSheets)[0]);
     // console.log("value", Object.keys(Object.values(workSheets)[0])[0]);
@@ -116,7 +116,7 @@ return (
     {currWorkSheet && console.log("current",workSheets[currWorkSheet][currSheet])}
     {currSheet && (
       <div>
-        <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} />
+        <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} sheet = {currSheet} />
         <TableComponent currSheet={workSheets[currWorkSheet][currSheet]} />
       </div>
     )}

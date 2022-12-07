@@ -1,27 +1,33 @@
 import react, { useState } from "react";
 import { Container, Dropdown, Table } from "react-bootstrap";
-import { ChartComponent } from "./ChartComponent";
 
 const TableComponent = ({currSheet}) => {
+    const header = currSheet[0]; 
 return (
+    // <div></div>
     <Container>
         <div>
         <Table striped bordered hover>
             <thead>
             <tr>
                 {currSheet &&
-                currSheet[1].map((sheet) => <th>{sheet}</th>)}
+                Object.keys(header).map((h) => <th>{h}</th>)}
             </tr>
             </thead>
             <tbody>
-            {currSheet &&
-                currSheet.slice(2).map((sheet) => (
-                <tr>
-                    {sheet.map((val) => {
-                    return <td>{val}</td>;
-                    })}
-                </tr>
-                ))}
+            {currSheet &&    
+                currSheet.map((row)=>
+                    <tr>
+                        {
+                            Object.values(row).map((val)=>
+                                <td>
+                                    {val}
+                                </td>
+                            )
+                        }
+                    </tr>
+                )
+            }
             </tbody>
         </Table>
         </div>
