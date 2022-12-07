@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import randomColor from 'randomcolor';
 import { Line } from 'react-chartjs-2';
+import TableMergeSheet from './TableMergeSheet';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -74,7 +75,12 @@ export function MergeSheetsChart({workSheets}) {
         labels,
         datasets: finalData
     };
-    console.log("filtered Object",obj);
-    console.log("final final ",finalData)
-  return data.datasets && <Line options={options} data={data} />;
+  return( 
+    finalData &&  
+        <>
+            <Line options={options} data={data} />
+            <TableMergeSheet header = {["cities",...labels]} rows = {finalData}/>
+        </>
+    
+    );
 }
