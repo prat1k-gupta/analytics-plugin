@@ -66,7 +66,6 @@ export function ChartComponent({currSheet,sheet}) {
       }else graphXValues.push(keys); 
     }
     
-    
     setGraphX(graphXValues);
     setGraphY(graphYValues);
     setCurrXKey(graphXValues[0])
@@ -74,7 +73,7 @@ export function ChartComponent({currSheet,sheet}) {
   },[currSheet])
 
   const final = currSheet.map((sheet)=>{
-    if(sheet[currXKey]=="Grand Total"){
+    if(sheet[currXKey]==="Grand Total"){
       return {
         label: "",
         data: 0,
