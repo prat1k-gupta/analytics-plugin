@@ -9,8 +9,8 @@ import "./styles.css"
 
 const ChooseFile = () => {
   const radios = [
-    { name: 'Total', value: '1' },
-    { name: 'sheets', value: '2' },
+    { name: 'City Data', value: '1' },
+    { name: 'Weekly Data', value: '2' },
   ];
   //states
   // const [workSheets,setWorkSheets] = useState({}); 
