@@ -67,7 +67,7 @@ const ChooseFile = () => {
 // console.log(mySheets); 
 return (
   <Container>
-    {/* WORK ON THIS */}
+    {/* choose excel files */}
     {fileName ? (
       <p>{fileName}</p>
     ) : (
@@ -78,6 +78,7 @@ return (
       </Form.Group>
     )}
     
+    {/* toggle button */}
     {workSheets && 
       <ButtonGroup className="mb-2">
         {radios.map((radio, idx) => (
@@ -150,12 +151,14 @@ return (
       {currWorkSheet && console.log("current",workSheets[currWorkSheet][currSheet])}
       {currSheet && (
         <div>
+          {/* chart component and table component */}
           <ChartComponent currSheet={workSheets[currWorkSheet][currSheet]} sheet = {currSheet} />
           <TableComponent currSheet={workSheets[currWorkSheet][currSheet]} />
         </div>
       )}
     </>
     :
+    //merge sheet component 
     <>
         <MergeSheetsChart workSheets = {workSheets}/>
     </>
